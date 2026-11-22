@@ -406,24 +406,24 @@ function renderNav() {
     dots.appendChild(d);
   });
   el('nav-prev').disabled = idx <= 0;
-  el('nav-next').disabled = idx < 0 || idx >= Math.min(maxReached, NAV_PHASES.length - 1);
+  el('nav-next').disabled = idx < 0 || idx >= NAV_PHASES.length - 1;
 }
 el('nav-prev').onclick = () => stepPhase(-1);
 el('nav-next').onclick = () => stepPhase(1);
 function stepPhase(d) {
   const idx = NAV_PHASES.findIndex(p => p.id === phase);
   const ni = idx + d;
-  if (ni >= 0 && ni <= Math.min(maxReached, NAV_PHASES.length - 1)) goTo(NAV_PHASES[ni].id);
+  if (ni >= 0 && ni < NAV_PHASES.length) goTo(NAV_PHASES[ni].id);
 }
 // swipe (pointer-based: mouse + touch)
 let swipeStart = null;
-addEventListener('pointerdown', (e) => { swipeStart = { x: e.clientX, y: e.clientY, t: performance.now() }; }, { passive: true });
+addEventListener('pointerdown', (e) => { swipeStart = { x: e.clientX, y: e.clientY, t: e.timeStamp }; }, { passive: true });
 addEventListener('pointerup', (e) => {
   if (!swipeStart) return;
   const dx = e.clientX - swipeStart.x, dy = e.clientY - swipeStart.y;
-  const dt = performance.now() - swipeStart.t;
+  const dt = e.timeStamp - swipeStart.t; // input timestamps: immune to main-thread jank
   swipeStart = null;
-  if (Math.abs(dx) > 70 && Math.abs(dy) < 50 && dt < 600 && phase && phase.startsWith('ch')) {
+  if (Math.abs(dx) > 70 && Math.abs(dy) < 50 && dt < 900 && phase && phase.startsWith('ch')) {
     stepPhase(dx < 0 ? 1 : -1);
   }
 }, { passive: true });
@@ -596,6 +596,8 @@ const phaseEnter = {
         updaters.add(() => { svyMarker.userData.ring.scale.setScalar(1 + Math.sin(performance.now() * 0.005) * 0.2); });
         camera.lookAt(new THREE.Vector3().copy(svyMarker.getWorldPosition(new THREE.Vector3())));
         showTitle('SCENE 03', 'OCEANUS PROCELLARUM', 'THE OCEAN OF STORMS · 3.01° S, 336.66° E', 3400);
+        // cinematic continuity: descend automatically if the marker isn't tapped
+        setTimeout(() => { if (phase === 'approach') goTo('discover'); }, 5200);
       }
     });
   },
@@ -632,6 +634,7 @@ const phaseEnter = {
       hotspotMarkers.forEach(m => m.userData.ring.scale.setScalar(1 + Math.sin(performance.now() * 0.004 + m.position.x) * 0.2));
     });
     setTimeout(() => {
+      if (!el('modal-wrap').classList.contains('hidden')) return; // visitor already opened a detail card
       openModal(`
         <div class="modal-kicker">MACHINE DISCOVERED</div>
         <div class="modal-title">SURVEYOR 3 · APRIL 1967</div>
