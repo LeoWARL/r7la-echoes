@@ -116,12 +116,17 @@ for (const [r, parent] of [[26, gSpace], [43, gSpace], [5.2, earth]]) {
 marsOrbit.rotation.y = 0.8;
 
 const moonMarker = pulseMarker();
-moonMarker.scale.setScalar(0.55);
-moonMarker.position.copy(moon.position).add(new THREE.Vector3(0, 0.95, 0));
-earth.add(moonMarker);
+moonMarker.scale.setScalar(1.5); // ring radius 0.75 encircles the 0.55-radius Moon
+moonMarker.userData.ring.rotation.x = Math.PI / 2.4; // tilt ring around the sphere
+moonMarker.children.forEach(c => { if (c.isSprite) c.visible = false; }); // hide center glow dot
+moon.add(moonMarker); // rides the Moon, never detaches
 const moonLbl = labelSprite('THE MOON · SELECT');
-moonLbl.position.set(0, 2.1, 0);
+moonLbl.position.set(0, 1.5, 0); moonLbl.scale.multiplyScalar(0.7);
 moonMarker.add(moonLbl);
+{ // leader line from ring to label
+  const lg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0.78, 0), new THREE.Vector3(0, 1.12, 0)]);
+  moonMarker.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ color: 0xe4b44c, transparent: true, opacity: 0.7 })));
+}
 moonMarker.userData.action = () => goTo('approach');
 
 const marsMarker = pulseMarker(0x7e929f);
@@ -484,6 +489,7 @@ function clearPhase() {
   gWelcome.visible = gSpace.visible = gSurface.visible = gLaunch.visible = false;
   moonMarker.visible = marsMarker.visible = false;
   hotspotMarkers.forEach(m => (m.visible = false));
+  el('hotspot-chips').classList.add('hidden'); el('hotspot-chips').classList.remove('on');
 }
 
 const svyMarker = pulseMarker();
@@ -606,9 +612,21 @@ const phaseEnter = {
     controls.maxPolarAngle = Math.PI * 0.55;
     sunLight.intensity = 2.4;
     showTitle('APRIL 1967 · OCEANUS PROCELLARUM, MOON', 'SURVEYOR 3', 'NASA LUNAR LANDER · JET PROPULSION LABORATORY', 4200);
-    echoSay('A faithful recreation stands before you — the real Surveyor 3 still rests at this site in the Ocean of Storms. Tap the glowing points to inspect its documented equipment.');
+    echoSay('A stylized 3D recreation stands before you — the real Surveyor 3 still rests at this site in the Ocean of Storms. Tap the glowing points to inspect its documented equipment.');
     playLines(['Surveyor 3 was sent to examine the Moon\'s surface before human lunar exploration. It photographed the terrain and used a mechanical sampler to investigate lunar soil.'], { interval: 1000 });
     hotspotMarkers.forEach(m => (m.visible = true));
+    // touch-sized chips for small screens; 3D labels stay for desktop
+    const chips = el('hotspot-chips');
+    chips.innerHTML = '';
+    for (const hs of lander.userData.hotspots) {
+      const b = document.createElement('button');
+      b.className = 'hotspot-chip'; b.textContent = hs.label;
+      b.onclick = () => showInfoModal(hs.label, hs.text);
+      chips.appendChild(b);
+    }
+    chips.classList.remove('hidden');
+    chips.classList.toggle('on', smallScreen.matches);
+    hotspotMarkers.forEach(mk => mk.children.forEach(ch => { if (ch.isSprite && ch.material.map && ch.scale.x > 1) ch.visible = !smallScreen.matches; }));
     updaters.add((dt) => {
       if (motionOn) skyEarth.rotation.y += dt * 0.05;
       hotspotMarkers.forEach(m => m.userData.ring.scale.setScalar(1 + Math.sin(performance.now() * 0.004 + m.position.x) * 0.2));
@@ -962,6 +980,15 @@ function boot() {
     if (ov === 'timeline') setTimeout(() => { /* wait for ch7 modal */ }, 100);
   }, delay);
 }
+
+// ECHO collapse toggle (mobile-safe layout)
+const echoPanel = el('echo-panel');
+const smallScreen = matchMedia('(max-width: 640px)');
+function applyEchoDefault() { echoPanel.classList.toggle('collapsed', smallScreen.matches); }
+smallScreen.addEventListener('change', applyEchoDefault);
+applyEchoDefault();
+el('echo-avatar').addEventListener('click', (e) => { e.stopPropagation(); echoPanel.classList.toggle('collapsed'); });
+el('echo-avatar').style.cursor = 'pointer';
 
 // testing hooks
 window.__goto = goTo;
