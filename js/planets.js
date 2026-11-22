@@ -18,17 +18,50 @@ function noisePatches(ctx, w, h, n, colors, rMin, rMax, seedStart = 7) {
 }
 
 export function makeEarth(r = 1) {
-  const tex = canvasTexture(1024, 512, (ctx, w, h) => {
+  const tex = canvasTexture(2048, 1024, (ctx, w, h) => {
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#0d3a5c'); g.addColorStop(0.5, '#10557f'); g.addColorStop(1, '#0b3350');
+    g.addColorStop(0, '#082b47'); g.addColorStop(0.5, '#0d4a73'); g.addColorStop(1, '#07273f');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    noisePatches(ctx, w, h, 26, ['#1f6b45', '#2a7d52', '#3d8a5c', '#c9b489'], 30, 120, 11); // continents
-    noisePatches(ctx, w, h, 90, ['#ffffff', '#eef6fb'], 5, 26, 23); // clouds
-    // polar caps
-    ctx.fillStyle = 'rgba(240,248,252,0.9)';
-    ctx.fillRect(0, 0, w, 22); ctx.fillRect(0, h - 22, w, 22);
+    // deep-ocean variation
+    noisePatches(ctx, w, h, 60, ['#0a3a5c', '#0e5482', '#093352'], 60, 220, 5);
+    // continents: layered irregular patches with coastline shading
+    let seed = 11;
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let c = 0; c < 14; c++) {
+      const cx = rand() * w, cy = h * 0.18 + rand() * h * 0.64;
+      const base = 40 + rand() * 110;
+      for (let l = 0; l < 3; l++) {
+        ctx.fillStyle = l === 0 ? '#173f2e' : (l === 1 ? '#1f6b45' : ['#2a7d52', '#3d8a5c', '#b8a06b'][Math.floor(rand() * 3)]);
+        ctx.globalAlpha = l === 0 ? 0.9 : 0.75;
+        for (let i = 0; i < 9; i++) {
+          ctx.beginPath();
+          ctx.ellipse(cx + (rand() - 0.5) * base * 1.6, cy + (rand() - 0.5) * base * 0.9,
+            base * (0.32 + rand() * 0.42) * (1 - l * 0.18), base * (0.22 + rand() * 0.3) * (1 - l * 0.18), rand() * Math.PI, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+    // cloud swirls
+    noisePatches(ctx, w, h, 120, ['#ffffff', '#eef6fb'], 6, 30, 23);
+    for (let i = 0; i < 26; i++) {
+      let s2 = 97 + i; const r2 = () => (s2 = (s2 * 16807) % 2147483647) / 2147483647;
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 4 + r2() * 8; ctx.lineCap = 'round';
+      ctx.beginPath();
+      const x0 = r2() * w, y0 = r2() * h;
+      ctx.moveTo(x0, y0);
+      ctx.bezierCurveTo(x0 + 60, y0 - 20, x0 + 120, y0 + 20, x0 + 200, y0 - 10);
+      ctx.stroke();
+    }
+    // polar caps with soft edge
+    const capT = ctx.createLinearGradient(0, 0, 0, 60);
+    capT.addColorStop(0, 'rgba(245,250,253,0.95)'); capT.addColorStop(1, 'rgba(245,250,253,0)');
+    ctx.fillStyle = capT; ctx.fillRect(0, 0, w, 60);
+    const capB = ctx.createLinearGradient(0, h - 60, 0, h);
+    capB.addColorStop(0, 'rgba(245,250,253,0)'); capB.addColorStop(1, 'rgba(245,250,253,0.95)');
+    ctx.fillStyle = capB; ctx.fillRect(0, h - 60, w, 60);
   });
-  const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, metalness: 0.05 });
+  const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.62, metalness: 0.08 });
   const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, 48, 32), mat);
   // atmosphere rim
   const atm = new THREE.Mesh(
@@ -40,10 +73,22 @@ export function makeEarth(r = 1) {
 }
 
 export function makeMoon(r = 1) {
-  const tex = canvasTexture(1024, 512, (ctx, w, h) => {
-    ctx.fillStyle = '#8f8d89'; ctx.fillRect(0, 0, w, h);
-    noisePatches(ctx, w, h, 240, ['#7a7874', '#6b6965', '#9c9a95', '#5d5b57'], 2, 26, 31); // craters/maria
-    noisePatches(ctx, w, h, 12, ['#63615d'], 40, 90, 47); // maria
+  const tex = canvasTexture(2048, 1024, (ctx, w, h) => {
+    ctx.fillStyle = '#8a8885'; ctx.fillRect(0, 0, w, h);
+    noisePatches(ctx, w, h, 14, ['#6e6c68', '#75736f'], 60, 170, 47); // maria
+    // craters with rim and floor shading
+    let seed = 31;
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < 420; i++) {
+      const x = rand() * w, y = rand() * h, rr = 1.5 + rand() * 24;
+      ctx.fillStyle = 'rgba(70,68,64,0.5)';
+      ctx.beginPath(); ctx.arc(x, y, rr, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(180,178,172,0.55)'; ctx.lineWidth = Math.max(1, rr * 0.18);
+      ctx.beginPath(); ctx.arc(x - rr * 0.12, y - rr * 0.12, rr * 0.9, Math.PI * 0.9, Math.PI * 1.9); ctx.stroke();
+      ctx.strokeStyle = 'rgba(60,58,54,0.5)';
+      ctx.beginPath(); ctx.arc(x, y, rr, Math.PI * 1.9, Math.PI * 0.9); ctx.stroke();
+    }
+    noisePatches(ctx, w, h, 200, ['#7a7874', '#9c9a95'], 1, 5, 91);
   });
   const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 1, metalness: 0 });
   return new THREE.Mesh(new THREE.SphereGeometry(r, 48, 32), mat);
@@ -52,10 +97,14 @@ export function makeMoon(r = 1) {
 export function makeMars(r = 1) {
   const tex = canvasTexture(1024, 512, (ctx, w, h) => {
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#b96b43'); g.addColorStop(0.5, '#c97a4e'); g.addColorStop(1, '#a85f3c');
+    g.addColorStop(0, '#a85a38'); g.addColorStop(0.5, '#c27146'); g.addColorStop(1, '#96522f');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    noisePatches(ctx, w, h, 40, ['#8f4c30', '#9c5436', '#d8916a'], 16, 70, 53);
-    ctx.fillStyle = 'rgba(245,240,235,0.85)'; ctx.fillRect(0, 0, w, 14);
+    noisePatches(ctx, w, h, 30, ['#7e3f26', '#8f4c30'], 30, 130, 53); // dark maria
+    noisePatches(ctx, w, h, 70, ['#9c5436', '#d8916a', '#b3653d'], 10, 50, 59);
+    noisePatches(ctx, w, h, 160, ['#8a4527', '#c97a4e'], 2, 12, 61);
+    const capM = ctx.createLinearGradient(0, 0, 0, 46);
+    capM.addColorStop(0, 'rgba(248,244,240,0.95)'); capM.addColorStop(1, 'rgba(248,244,240,0)');
+    ctx.fillStyle = capM; ctx.fillRect(0, 0, w, 46);
   });
   const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 1, metalness: 0 });
   return new THREE.Mesh(new THREE.SphereGeometry(r, 48, 32), mat);

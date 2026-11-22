@@ -116,10 +116,11 @@ for (const [r, parent] of [[26, gSpace], [43, gSpace], [5.2, earth]]) {
 marsOrbit.rotation.y = 0.8;
 
 const moonMarker = pulseMarker();
-moonMarker.position.copy(moon.position).add(new THREE.Vector3(0, 1.6, 0));
+moonMarker.scale.setScalar(0.55);
+moonMarker.position.copy(moon.position).add(new THREE.Vector3(0, 0.95, 0));
 earth.add(moonMarker);
 const moonLbl = labelSprite('THE MOON · SELECT');
-moonLbl.position.set(0, 2.6, 0);
+moonLbl.position.set(0, 2.1, 0);
 moonMarker.add(moonLbl);
 moonMarker.userData.action = () => goTo('approach');
 
@@ -174,12 +175,12 @@ const skyEarth = makeEarth(0.8); skyEarth.position.set(-18, 22, -30); gSurface.a
 const hotspotMarkers = [];
 for (const hs of lander.userData.hotspots) {
   const mk = pulseMarker(0x39b9c9);
-  mk.scale.setScalar(0.35);
-  mk.position.copy(hs.pos).applyAxisAngle(new THREE.Vector3(0, 1, 0), -0.5);
+  mk.scale.setScalar(0.22);
+  mk.position.copy(hs.pos);
   mk.userData.action = () => showInfoModal(hs.label, hs.text);
   mk.userData.hotspot = hs.id;
-  const lbl = labelSprite(hs.label, { color: '#39b9c9', size: 30 });
-  lbl.position.set(0, 0.5, 0); lbl.scale.multiplyScalar(0.6);
+  const lbl = labelSprite(hs.label, { color: '#39b9c9', size: 46 });
+  lbl.position.set(0, 0.85, 0); lbl.scale.multiplyScalar(1.1);
   mk.add(lbl);
   mk.visible = false;
   lander.add(mk);
@@ -610,7 +611,7 @@ const phaseEnter = {
     controls.maxPolarAngle = Math.PI * 0.55;
     sunLight.intensity = 2.4;
     showTitle('APRIL 1967 · OCEANUS PROCELLARUM, MOON', 'SURVEYOR 3', 'NASA LUNAR LANDER · JET PROPULSION LABORATORY', 4200);
-    echoSay('There it is — the real thing, still standing where it landed. Tap the glowing points to inspect its documented equipment.');
+    echoSay('A faithful recreation stands before you — the real Surveyor 3 still rests at this site in the Ocean of Storms. Tap the glowing points to inspect its documented equipment.');
     playLines(['Surveyor 3 was sent to examine the Moon\'s surface before human lunar exploration. It photographed the terrain and used a mechanical sampler to investigate lunar soil.'], { interval: 1000 });
     hotspotMarkers.forEach(m => (m.visible = true));
     updaters.add((dt) => {

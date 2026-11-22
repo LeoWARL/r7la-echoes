@@ -103,13 +103,13 @@ export function buildSurveyor3() {
   const omni = sph(0.05, M.metal); omni.position.set(0.5, 2.52, -0.35); g.add(omni);
 
   hotspots.push(
-    { id: 'camera', label: 'TELEVISION CAMERA', pos: new THREE.Vector3(0.88, 1.7, 0),
+    { id: 'camera', label: 'TELEVISION CAMERA', pos: new THREE.Vector3(0.9, 1.72, 0),
       text: 'Surveyor 3 carried a television camera with a movable mirror. It transmitted more than 6,000 images of the surrounding lunar surface back to Earth. Apollo 12 astronauts later removed this camera and returned it to Earth for scientific examination.' },
-    { id: 'scoop', label: 'SURFACE SAMPLER', pos: new THREE.Vector3(1.45, 0.35, 1.1),
+    { id: 'scoop', label: 'SURFACE SAMPLER', pos: new THREE.Vector3(1.48, 0.15, 1.13),
       text: 'A remotely operated mechanical arm with a scoop dug trenches and manipulated lunar soil. Its tests helped scientists measure the strength and bearing properties of the surface — key evidence that the ground could support an Apollo Lunar Module.' },
-    { id: 'legs', label: 'LANDING LEGS', pos: new THREE.Vector3(-1.2, 0.35, 0.8),
+    { id: 'legs', label: 'LANDING LEGS', pos: new THREE.Vector3(1.17, 0.2, 0.67),
       text: 'Three shock-absorbing legs with wide footpads cushioned the April 20, 1967 soft landing in Oceanus Procellarum. Surveyor 3 actually bounced twice on touchdown before settling onto the surface.' },
-    { id: 'solar', label: 'SOLAR PANEL', pos: new THREE.Vector3(0.2, 2.95, 0),
+    { id: 'solar', label: 'SOLAR PANEL', pos: new THREE.Vector3(0.16, 2.95, 0),
       text: 'A single photovoltaic panel on the central mast powered the spacecraft through the lunar day. When NASA last communicated with Surveyor 3 on May 4, 1967, the mission had completed its primary objectives.' },
   );
   g.userData.hotspots = hotspots;
