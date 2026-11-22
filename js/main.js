@@ -132,12 +132,7 @@ marsLbl.position.set(0, 2.4, 0); marsMarker.add(marsLbl);
 marsMarker.userData.action = () => toast('Mars expeditions are coming in a future R7LA mission.');
 gSpace.add(marsMarker);
 
-const earthMarker = pulseMarker(0x7e929f);
-earthMarker.position.copy(earth.position).add(new THREE.Vector3(0, -3.4, 0));
-const earthLbl = labelSprite('EARTH · HOME BASE', { color: '#7e929f' });
-earthLbl.position.set(0, 2.2, 0); earthMarker.add(earthLbl);
-earthMarker.userData.action = () => toast('Earth is home base — our journey starts here.');
-gSpace.add(earthMarker);
+// earth marker removed: ring read as detached clutter; home-base note lives in ECHO's line
 
 const spaceNote = labelSprite('SCHEMATIC VIEW — DISTANCES NOT TO SCALE', { color: '#7e929f', size: 30 });
 spaceNote.position.set(0, -16, 0); spaceNote.scale.multiplyScalar(2.4);
@@ -431,7 +426,7 @@ addEventListener('pointerup', (e) => {
 /* ---------- picking ---------- */
 function pickables() {
   const arr = [];
-  if (phase === 'space') arr.push(moonMarker, marsMarker, earthMarker);
+  if (phase === 'space') arr.push(moonMarker, marsMarker);
   if (phase === 'approach') arr.push(svyMarker);
   if (phase === 'discover') arr.push(...hotspotMarkers.filter(m => m.visible));
   return arr;

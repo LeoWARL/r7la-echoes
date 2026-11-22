@@ -111,11 +111,13 @@ export function makeMars(r = 1) {
 }
 
 export function makeSun(r = 1) {
-  const tex = canvasTexture(512, 256, (ctx, w, h) => {
-    const g = ctx.createLinearGradient(0, 0, w, h);
-    g.addColorStop(0, '#ffd98a'); g.addColorStop(0.5, '#ffb84d'); g.addColorStop(1, '#ff9a2e');
+  const tex = canvasTexture(1024, 512, (ctx, w, h) => {
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#ffc76a'); g.addColorStop(0.5, '#ffab3d'); g.addColorStop(1, '#ffc76a');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    noisePatches(ctx, w, h, 60, ['#ffe9b8', '#e8912f'], 8, 30, 67);
+    noisePatches(ctx, w, h, 900, ['#ffd98a', '#f59a2e', '#ffe9b8', '#e88a25'], 1, 4, 67); // fine granulation
+    noisePatches(ctx, w, h, 60, ['#f8a52c', '#ffbe55'], 12, 40, 71); // subtle mid-scale variation
+    noisePatches(ctx, w, h, 14, ['#c96f14'], 3, 9, 73); // sparse sunspot flecks
   });
   const mesh = new THREE.Mesh(
     new THREE.SphereGeometry(r, 48, 32),
