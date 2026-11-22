@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>R7LA · ECHOES — Surveyor 3</title>
+<meta name="description" content="An interactive cinematic journey to NASA's Surveyor 3 on the Moon. An R7LA / ECHOES storytelling prototype." />
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/main.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "./js/vendor/three.module.js",
+    "three/addons/": "./js/vendor/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="loader">
+  <div class="loader-inner">
+    <img src="assets/logo.svg" alt="R7LA" class="loader-logo" />
+    <div class="loader-word">R7LA</div>
+    <div class="loader-tag">HUMANITY'S FOOTPRINTS BEYOND EARTH</div>
+    <div class="loader-bar"><div id="loader-fill"></div></div>
+    <div id="loader-status">Preparing expedition…</div>
+  </div>
+</div>
+
+<canvas id="scene"></canvas>
+
+<!-- top-right controls (minimal) -->
+<div id="topbar" class="hidden">
+  <button id="btn-audio" class="icon-btn" title="Ambient sound (optional)" aria-label="Toggle ambient sound">
+    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/><path class="audio-waves" d="M16 8a5 5 0 0 1 0 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </button>
+  <button id="btn-motion" class="icon-btn" title="Pause motion" aria-label="Pause or resume motion">
+    <svg class="ic-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="currentColor"/><rect x="14" y="5" width="4" height="14" fill="currentColor"/></svg>
+    <svg class="ic-play hidden" viewBox="0 0 24 24"><path d="M7 4l14 8-14 8z" fill="currentColor"/></svg>
+  </button>
+  <button id="btn-skip" class="text-btn hidden">SKIP ›</button>
+</div>
+
+<!-- scene title card -->
+<div id="title-card" class="hidden">
+  <div id="title-kicker"></div>
+  <h1 id="title-main"></h1>
+  <div id="title-sub"></div>
+</div>
+
+<!-- ECHO companion (compact) -->
+<div id="echo-panel" class="hidden">
+  <div id="echo-avatar"><div class="echo-eye"></div></div>
+  <div id="echo-bubble">
+    <div class="echo-name">ECHO</div>
+    <div id="echo-text"></div>
+  </div>
+</div>
+
+<!-- subtitle bar -->
+<div id="subtitles" class="hidden"><p id="subtitle-text"></p></div>
+
+<!-- modal card (photos, quiz, timeline, info) -->
+<div id="modal-wrap" class="hidden">
+  <div id="modal-card"></div>
+</div>
+
+<!-- bottom scene navigation -->
+<nav id="scene-nav" class="hidden" aria-label="Scene navigation">
+  <button id="nav-prev" class="nav-arrow" aria-label="Previous scene">‹</button>
+  <div id="nav-track">
+    <div id="nav-current"></div>
+    <div id="nav-dots"></div>
+  </div>
+  <button id="nav-next" class="nav-arrow" aria-label="Next scene">›</button>
+</nav>
+
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<script>
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    if(!window.__r7laBooted){
+      var s=document.getElementById('loader-status');
+      if(s)s.innerHTML='<div class="fallback-error">The experience could not start. This prototype loads its 3D engine (three.js, included locally in js/vendor/) and fonts (Google Fonts CDN). Check your connection and reload. If it keeps failing on this device, try a current Chrome, Edge, Firefox or Safari.</div>';
+    }
+  },9000);
+});
+</script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
