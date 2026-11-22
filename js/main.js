@@ -482,7 +482,7 @@ function clearPhase() {
   hide(el('btn-skip'));
   controls.enabled = false;
   gWelcome.visible = gSpace.visible = gSurface.visible = gLaunch.visible = false;
-  moonMarker.visible = marsMarker.visible = earthMarker.visible = false;
+  moonMarker.visible = marsMarker.visible = false;
   hotspotMarkers.forEach(m => (m.visible = false));
 }
 
@@ -536,7 +536,7 @@ const phaseEnter = {
 
   space() {
     gSpace.visible = true;
-    moonMarker.visible = marsMarker.visible = earthMarker.visible = true;
+    moonMarker.visible = marsMarker.visible = true;
     const mScale = innerWidth < 720 ? 1.7 : 1;
     camera.position.set(33 * mScale, 10 * mScale, 24 * mScale);
     controls.target.set(20, 0, 2);
