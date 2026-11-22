@@ -992,6 +992,12 @@ el('echo-avatar').style.cursor = 'pointer';
 
 // testing hooks
 window.__goto = goTo;
+window.__moonScreen = () => {
+  const v = new THREE.Vector3();
+  moon.getWorldPosition(v); v.project(camera);
+  return { x: (v.x * 0.5 + 0.5) * innerWidth, y: (-v.y * 0.5 + 0.5) * innerHeight, visible: v.z < 1 };
+};
+window.__modalOpen = () => !el('modal-wrap').classList.contains('hidden');
 window.__phase = null;
 
 boot();
