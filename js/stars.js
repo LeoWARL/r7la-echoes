@@ -26,7 +26,7 @@ const BRIGHT_STARS = [
   ['Menkalinan', 5.992, 44.947, 1.90], ['Atria', 16.811, -69.028, 1.91],
   ['Alhena', 6.629, 16.399, 1.92], ['Peacock', 20.428, -56.735, 1.94],
   ['Alsephina', 8.745, -54.709, 1.96], ['Mirzam', 6.378, -17.956, 1.98],
-  ['Alphard', 9.460, -8.659, 1.98], ['Polaris', 2.530, 89.264, 1.98],
+  ['Alphard', 9.460, -8.659, 1.98], ['Polaris', 2.530, 89.264, 1.98], ['Gamma Cas', 0.945, 60.717, 2.47], ['Ruchbah', 1.430, 60.235, 2.68], ['Segin', 1.907, 63.670, 3.37],
   ['Hamal', 2.120, 23.463, 2.00], ['Algol', 3.136, 40.956, 2.12],
   ['Diphda', 0.726, -17.987, 2.04], ['Mizar', 13.399, 54.925, 2.04],
   ['Almach', 2.065, 42.330, 2.06], ['Caph', 0.153, 59.150, 2.27],
@@ -46,7 +46,7 @@ const CONSTELLATION_LINES = [
   ['Dubhe', 'Merak'], ['Merak', 'Phecda'], ['Phecda', 'Megrez'], ['Megrez', 'Dubhe'],
   ['Megrez', 'Alioth'], ['Alioth', 'Mizar'], ['Mizar', 'Alkaid'],
   // Cassiopeia (W)
-  ['Caph', 'Schedar'], ['Schedar', 'Gamma Cas'],
+  ['Caph', 'Schedar'], ['Schedar', 'Gamma Cas'], ['Gamma Cas', 'Ruchbah'], ['Ruchbah', 'Segin'],
 ];
 
 function raDecToVec(raHours, decDeg, r) {
