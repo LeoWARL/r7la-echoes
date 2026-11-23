@@ -154,7 +154,7 @@ function renderChapter() {
   const lastBeat = state.beat === ch.beats.length - 1;
   const lastChapter = state.ch === STORY.chapters.length - 1;
   const visual = ch.photo && state.beat >= ch.beats.length - 2
-    ? photoFig(ch.photo, 'kenburns')
+    ? photoFig(ch.photo)
     : `<div class="art-wrap">${ART[ch.art] || ART.ch1}${hotspotMarkers(ch)}</div>${hotspotCard(ch)}`;
   const btnLabel = lastBeat ? (lastChapter ? 'FINISH THE STORY' : 'NEXT CHAPTER ›') : 'CONTINUE';
   app.innerHTML = `
@@ -169,8 +169,8 @@ function renderChapter() {
     <p class="beat-text" id="beat-text">${ch.beats[state.beat]}</p>
     ${beatDots(ch)}
     <button class="btn primary" id="btn-next">${btnLabel}</button>
-  </section>
-  ${navHTML()}`;
+    ${navHTML()}
+  </section>`;
   document.getElementById('btn-next').onclick = next;
   app.querySelectorAll('[data-hs]').forEach(b => {
     b.onclick = () => { const i = +b.dataset.hs; state.hotspot = state.hotspot === i ? null : i; render(); };
