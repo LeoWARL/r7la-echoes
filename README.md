@@ -1,10 +1,8 @@
 # R7LA · ECHOES — First Interactive Mission: Surveyor 3
 
-An interactive cinematic storytelling prototype for school-age audiences.
-A visitor boards an exploration spacecraft with the robot guide ECHO, explores a
-stylized space environment, selects the Moon, discovers NASA's Surveyor 3, and
-experiences its verified historical story — from launch (April 17, 1967) to the
-Apollo 12 reunion (November 20, 1969).
+A light, reader-led storytelling prototype about NASA's Surveyor 3 — the robotic
+lander that scouted the Moon in 1967 and was visited by Apollo 12 astronauts two
+years later. Built for school-age audiences; narrated by the robot guide ECHO.
 
 **Run it:** serve this folder with any static server and open `index.html`.
 
@@ -13,22 +11,25 @@ python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
-No build step. No API keys. No backend. Works on desktop and mobile browsers
-(touch orbit, swipe between story chapters).
+No build step, no dependencies, no API keys, no backend. Plain HTML/CSS/JS
+(~40 KB of code) plus four credited NASA photographs. Works on desktop and
+mobile; text advances only when the reader asks (button, tap, swipe, arrow keys).
 
-## What's inside
+## Design
 
-- 7-chapter cinematic story (Welcome → Space Exploration → Moon approach →
-  Surveyor 3 discovery → 7 story chapters → Return to Exploration)
-- Continuous launch sequence (pad → ignition → liftoff → cloud layer → orbit)
-  with no black cut between scenes
-- Detailed procedural 3D Surveyor 3 with four documented-equipment hotspots
-  (TV camera, surface sampler scoop, landing legs, solar panel)
-- Interactive mission quiz, Apollo 12 reveal, and clickable two-event timeline
-- Compact ECHO companion UI, always-on subtitles, optional ambient audio
-  (off by default), scene play/pause motion control
-- Bottom scene navigation with dots, arrows, and left/right swipe
-- Reduced-motion support via `prefers-reduced-motion`
+- **Reader-led pacing** — each chapter's text is split into short beats that
+  advance only on the reader's action. Beat indicators, a "Chapter X of 7"
+  label, and a top progress bar make it clear where you are and when a part
+  is finished.
+- **Clear beginning and end** — a cover screen opens the story and an
+  epilogue closes it with a mission timeline, NASA archive photos, an optional
+  quiz, and a replay button. Replay fully resets the story state.
+- **Light visuals** — inline SVG line illustrations and credited NASA archive
+  photography instead of a 3D engine. Subtle CSS motion (stars, flame, signal)
+  with a pause/play control and `prefers-reduced-motion` support.
+- **State lifecycle** — one immutable-style state object drives every screen;
+  each render rebuilds the DOM from it, so back-navigation and replay cannot
+  leak visuals or dialogue from later chapters.
 
 ## Accuracy notes
 
@@ -36,46 +37,33 @@ No build step. No API keys. No backend. Works on desktop and mobile browsers
   details follow the NASA sources below. Surveyor 3 is never described as the
   first Moon lander, and only its retrieved components — not the spacecraft —
   returned to Earth.
-- **Named stars** use real catalog positions (RA/Dec, J2000) for ~60 of the
-  brightest stars; faint background stars are decorative.
-- **Planet distances and sizes in the space scene are schematic** (compressed
-  for readability) and labeled as such in the experience. They are not true
-  scale or ephemeris positions.
-- All spacecraft and robots are **stylized 3D recreations**, labeled in the UI.
-  Authentic imagery appears only as **credited NASA photography** with source
-  links, tagged differently from recreations.
+- Scene illustrations are stylized line art, not depictions of exact geometry.
+  Authentic imagery appears only as credited NASA photography with source links.
 - ECHO's dialogue is fictional guide narration, never presented as historical
   quotation.
 
 ## NASA photographs used (public domain, with source links)
 
-- AS12-48-7110 — Surveyor 3 photographed by Alan Bean, Nov 20, 1969
-- AS12-48-7121 — Surveyor 3 in its crater, Apollo 12, Nov 1969
-- AS12-48-7134 — Alan Bean with Surveyor 3, Apollo 12 LM beyond, Nov 20, 1969
-- AS12-48-7149 — Charles Conrad during lunar EVA, Apollo 12, Nov 1969
+- `assets/nasa/surveyor3-surface.jpg` — AS12-48-7110, Surveyor 3 photographed by
+  Alan Bean (https://images.nasa.gov/details/as12-48-7110)
+- `assets/nasa/surveyor3-crater.jpg` — AS12-48-7121, Surveyor 3 in its crater
+  (https://images.nasa.gov/details/as12-48-7121)
+- `assets/nasa/apollo12-bean-surveyor3.jpg` — AS12-48-7134, Alan Bean with
+  Surveyor 3 (https://images.nasa.gov/details/AS12-48-7134)
+- `assets/nasa/apollo12-conrad-eva.jpg` — AS12-48-7149, Charles Conrad on EVA
+  (https://images.nasa.gov/details/as12-48-7149)
 
-## Historical sources
+## Sources
 
-1. https://science.nasa.gov/mission/surveyor-3/
-2. https://science.nasa.gov/resource/apollo-12-and-surveyor-3/
-3. https://science.nasa.gov/solar-system/moon/footpads-and-footprints-humans-and-machine-meet-on-the-moon/
-4. https://nssdc.gsfc.nasa.gov/planetary/lunar/surveyor.html
-5. https://www.nasa.gov/history/55-years-ago-apollo-12-makes-a-pinpoint-landing-on-the-moon/
-6. https://ntrs.nasa.gov/citations/19710024418
-7. https://images.nasa.gov/
+- NASA NSSDC — Surveyor 3 mission record (launch/landing dates, coordinates)
+- NASA — Apollo 12 mission history (landing ~600 ft from Surveyor 3, component
+  retrieval, November 20, 1969 surface operations)
+- NASA Images — the four photographs above
 
-## Dependencies
+## Files
 
-- three.js r160 — vendored locally in `js/vendor/` (MIT). No runtime CDN needed
-  for the 3D engine.
-- Google Fonts CDN (Space Grotesk, IBM Plex Mono) with system-font fallback;
-  the experience degrades gracefully if fonts cannot load.
-
-## Credits & license
-
-- R7LA is an independent editorial project by AFTERLIGHT; not affiliated with
-  or endorsed by NASA.
-- Brand direction, story brief and revision notes: Leo / R7LA team.
-- The R7LA logo mark here is an SVG recreation from the team's deck branding —
-  replace `assets/logo.svg` with the original artwork when available.
-- three.js © three.js authors, MIT license.
+- `index.html` — shell (progress bar, top bar, app mount)
+- `css/main.css` — all styling and animation
+- `js/storyData.js` — every word of narration and chapter content
+- `js/main.js` — state engine, rendering, navigation, inline SVG art
+- `assets/` — R7LA logo and the four NASA photographs
