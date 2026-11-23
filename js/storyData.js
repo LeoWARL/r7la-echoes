@@ -27,7 +27,7 @@ const STORY = {
       kicker: 'CHAPTER 2 OF 7 · CAPE KENNEDY, FLORIDA',
       title: 'LAUNCH DAY',
       art: 'ch2',
-      echo: 'I still get chills at a countdown. This one went perfectly.',
+      echo: 'I still get chills at a countdown. Every single time.',
       beats: [
         'April 17, 1967. An Atlas-Centaur rocket stands ready at Cape Kennedy, Florida.',
         'Its payload: a three-legged robotic explorer named Surveyor 3.',
@@ -50,7 +50,17 @@ const STORY = {
       kicker: 'CHAPTER 4 OF 7 · EXPLORING THE SURFACE',
       title: 'WHAT DID IT FIND?',
       art: 'ch4',
-      echo: 'Six thousand photos and one busy little scoop. This robot worked hard.',
+      echo: 'Six thousand photos and one busy little scoop. Tap the numbered markers to meet the machine.',
+      hotspots: [
+        { x: 50.0, y: 28, label: 'TELEVISION CAMERA',
+          text: 'A television camera with a movable mirror transmitted more than 6,000 images of the lunar surface to Earth. Apollo 12 astronauts later removed it and brought it home for study.' },
+        { x: 60.3, y: 50, label: 'SOLAR PANEL',
+          text: 'A single photovoltaic panel on the mast powered the spacecraft through the lunar day, until NASA last heard from it on May 4, 1967.' },
+        { x: 35.7, y: 80, label: 'SURFACE SAMPLER',
+          text: 'A remote-controlled arm with a scoop dug trenches and tested the soil. Its measurements showed the ground could bear an Apollo Lunar Module.' },
+        { x: 58.7, y: 88, label: 'LANDING LEGS',
+          text: 'Three shock-absorbing legs with wide footpads cushioned the April 20, 1967 landing. Surveyor 3 actually bounced twice before settling.' },
+      ],
       beats: [
         'Surveyor 3 photographed its surroundings and used a mechanical scoop to dig and examine lunar soil.',
         'It sent more than 6,000 images back to Earth.',
