@@ -114,7 +114,7 @@ function photoFig(key, extraClass) {
   const p = STORY.photos[key];
   return `<figure class="photo ${extraClass || ''}">
     <a href="${p.link}" target="_blank" rel="noopener" title="View at NASA Images">
-      <img src="${p.src}" alt="${p.credit}" loading="lazy"/>
+      <img src="${p.src}" alt="${p.credit}" />
     </a>
     <figcaption><span class="nasa-tag">NASA ARCHIVE</span>${p.credit}</figcaption>
   </figure>`;
@@ -155,7 +155,7 @@ function renderChapter() {
   const lastChapter = state.ch === STORY.chapters.length - 1;
   const visual = ch.photo && state.beat >= ch.beats.length - 2
     ? photoFig(ch.photo, 'kenburns')
-    : `<div class="art-wrap">${ART[ch.art] || ART.ch1}</div>`;
+    : `<div class="art-wrap">${ART[ch.art] || ART.ch1}${hotspotMarkers(ch)}</div>${hotspotCard(ch)}`;
   const btnLabel = lastBeat ? (lastChapter ? 'FINISH THE STORY' : 'NEXT CHAPTER ›') : 'CONTINUE';
   app.innerHTML = `
   <section class="screen chapter">
@@ -172,6 +172,9 @@ function renderChapter() {
   </section>
   ${navHTML()}`;
   document.getElementById('btn-next').onclick = next;
+  app.querySelectorAll('[data-hs]').forEach(b => {
+    b.onclick = () => { const i = +b.dataset.hs; state.hotspot = state.hotspot === i ? null : i; render(); };
+  });
   bindNav();
 }
 
@@ -182,7 +185,8 @@ function renderEpilogue() {
     <div class="ch-kicker">${ep.kicker}</div>
     <h2 class="ch-title gold">${ep.title}</h2>
     ${echoRow(ep.echo)}
-    <div class="facts">${ep.facts.map(f => `<div class="fact"><div class="fact-date">${f[0]}</div><div class="fact-label">${f[1]}</div></div>`).join('')}</div>
+    <div class="facts-hint">TAP A DATE TO REVISIT THAT CHAPTER</div>
+    <div class="facts">${ep.facts.map((f, i) => `<button class="fact" data-jump="${[1, 2, 4, 5][i]}"><div class="fact-date">${f[0]}</div><div class="fact-label">${f[1]}</div></button>`).join('')}</div>
     <div class="archive">
       <div class="archive-head">FROM THE NASA ARCHIVE</div>
       <div class="archive-grid">${photoFig('crater')}${photoFig('conrad')}</div>
@@ -211,10 +215,23 @@ function renderEpilogue() {
     };
   });
   app.querySelectorAll('[data-goto]').forEach(b => {
-    b.onclick = () => { state.screen = 'chapter'; state.ch = +b.dataset.goto; state.beat = 0; render(); };
+    b.onclick = () => { state.hotspot = null; state.screen = 'chapter'; state.ch = +b.dataset.goto; state.beat = 0; render(); };
+  });
+  app.querySelectorAll('[data-jump]').forEach(b => {
+    b.onclick = () => { state.hotspot = null; state.screen = 'chapter'; state.ch = +b.dataset.jump; state.beat = 0; render(); };
   });
 }
 
+function hotspotMarkers(ch) {
+  if (!ch.hotspots) return '';
+  return ch.hotspots.map((h, i) =>
+    `<button class="hs-marker${state.hotspot === i && state.screen === 'chapter' ? ' open' : ''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" aria-label="${h.label}">${i + 1}</button>`).join('');
+}
+function hotspotCard(ch) {
+  if (!ch.hotspots || state.hotspot == null) return '';
+  const h = ch.hotspots[state.hotspot];
+  return `<div class="hs-card"><div class="hs-label">${h.label}</div><p class="hs-text">${h.text}</p></div>`;
+}
 function navHTML() {
   const ch = STORY.chapters[state.ch];
   const canPrev = state.ch > 0;
@@ -233,12 +250,13 @@ function bindNav() {
   if (p) p.onclick = prevChapter;
   if (n) n.onclick = () => { if (state.completed || state.ch < state.maxCh) { state.ch++; state.beat = 0; state.screen = 'chapter'; render(); } };
   app.querySelectorAll('.ch-dots [data-goto]').forEach(b => {
-    b.onclick = () => { const i = +b.dataset.goto; if (state.completed || i <= state.maxCh) { state.screen = 'chapter'; state.ch = i; state.beat = 0; render(); } };
+    b.onclick = () => { const i = +b.dataset.goto; if (state.completed || i <= state.maxCh) { state.hotspot = null; state.screen = 'chapter'; state.ch = i; state.beat = 0; render(); } };
   });
 }
 
 /* ---------- transitions ---------- */
 function next() {
+  state.hotspot = null;
   if (state.screen === 'cover') { state.screen = 'chapter'; render(); return; }
   if (state.screen !== 'chapter') return;
   const ch = STORY.chapters[state.ch];
@@ -254,6 +272,7 @@ function next() {
   render();
 }
 function prevChapter() {
+  state.hotspot = null;
   if (state.screen === 'chapter' && state.ch > 0) { state.ch--; state.beat = 0; render(); }
 }
 function prev() {
