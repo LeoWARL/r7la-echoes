@@ -64,7 +64,7 @@ body.motion-paused *, body.motion-paused::before { animation-play-state: paused 
 .icon-btn:hover, .icon-btn:focus-visible { border-color: var(--teal); }
 
 /* layout */
-#app { max-width: 720px; margin: 0 auto; padding: 8px 20px 120px; }
+#app { max-width: 720px; margin: 0 auto; padding: 8px 20px 30px; }
 .screen { animation: fadeUp .55s ease both; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
@@ -78,7 +78,7 @@ body.motion-paused *, body.motion-paused::before { animation-play-state: paused 
 .cover-note { font-size: 12px; color: #5d7684; max-width: 44ch; line-height: 1.6; margin-top: 8px; }
 
 /* ECHO */
-.echo-row { display: flex; align-items: center; gap: 12px; background: #0a1a2799; border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px; max-width: 560px; }
+.echo-row { display: flex; align-items: center; gap: 12px; background: #0a1a2799; border: 1px solid var(--line); border-radius: 16px; padding: 9px 14px; max-width: 560px; }
 .echo-orb { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #123041, #060d14); border: 1px solid var(--teal); display: grid; place-items: center; flex: none; }
 .echo-eye { width: 12px; height: 12px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 10px var(--teal); animation: blink 4s infinite; }
 @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.12); } }
@@ -98,7 +98,7 @@ body.motion-paused *, body.motion-paused::before { animation-play-state: paused 
 .btn.big { font-size: 15px; padding: 17px 34px; }
 
 /* chapter */
-.chapter { display: flex; flex-direction: column; gap: 13px; padding-top: 6px; }
+.chapter { display: flex; flex-direction: column; gap: 11px; padding-top: 4px; }
 .ch-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ch-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; color: var(--teal); }
 .ch-date { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--gold); border: 1px solid #e4b44c3d; padding: 5px 11px; border-radius: 999px; }
@@ -121,7 +121,7 @@ body.motion-paused *, body.motion-paused::before { animation-play-state: paused 
 button.fact { text-align: left; cursor: pointer; font-family: var(--font); }
 button.fact:hover, button.fact:focus-visible { border-color: var(--gold); }
 .art { display: block; width: 100%; height: auto; }
-@media (min-width: 641px) { .art { width: auto; max-width: 100%; max-height: 235px; margin: 0 auto; } }
+@media (min-width: 641px) { .art { width: auto; max-width: 100%; max-height: 208px; margin: 0 auto; } }
 .beat-text { font-size: clamp(17px, 2.6vw, 20px); line-height: 1.65; color: #e7eef4; min-height: 2.8em; animation: fadeUp .4s ease both; }
 .beat-dots { display: flex; gap: 7px; }
 .bdot { width: 22px; height: 4px; border-radius: 2px; background: var(--line); }
@@ -131,7 +131,7 @@ button.fact:hover, button.fact:focus-visible { border-color: var(--gold); }
 
 /* photos */
 .photo { background: #060d14; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
-.photo img { display: block; width: 100%; height: auto; max-height: 44vh; object-fit: cover; object-position: center 28%; }
+.photo img { display: block; width: 100%; height: auto; max-height: 62vh; object-fit: contain; background: #060d14; }
 .photo.kenburns img { animation: kb 14s ease-in-out infinite alternate; }
 @keyframes kb { from { transform: scale(1); } to { transform: scale(1.06); } }
 .photo figcaption { padding: 10px 14px; font-size: 12px; line-height: 1.5; color: var(--dim); display: flex; gap: 8px; align-items: baseline; }
@@ -141,7 +141,7 @@ button.fact:hover, button.fact:focus-visible { border-color: var(--gold); }
 
 /* bottom nav */
 .story-nav {
-  position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px; z-index: 20;
+  margin: 14px auto 4px;
   display: flex; align-items: center; gap: 14px;
   background: #081420ee; border: 1px solid var(--line); border-radius: 999px;
   padding: 8px 14px; backdrop-filter: blur(6px);
@@ -194,10 +194,10 @@ button.fact:hover, button.fact:focus-visible { border-color: var(--gold); }
 @keyframes sig { 0%, 100% { opacity: .9; } 50% { opacity: .15; } }
 
 @media (max-width: 640px) {
-  #app { padding: 4px 14px 110px; }
+  #app { padding: 4px 14px 26px; }
   .facts, .archive-grid { grid-template-columns: 1fr; }
   .echo-line { font-size: 13.5px; }
   #btn-next { align-self: stretch; }
-  .story-nav { bottom: 10px; gap: 10px; padding: 6px 10px; }
+  .story-nav { gap: 10px; padding: 6px 10px; }
   .nav-label { font-size: 9.5px; }
-                           }
+                                           }
